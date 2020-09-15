@@ -20,6 +20,13 @@ class Quarter extends Model
         'number_clusters_desired',
         'number_clusters_ha',
         'number_clusters_for_quarters',
-        'id_farm'
+        'id_farm',
+        'formacion',
+        'edad_plantas',
+        'distancia_entrehilera',
+        'distancia_sobrehilera',
+        'densidad_plantas'
+        
     ];
 }
+

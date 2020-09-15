@@ -11,6 +11,9 @@ use App\Role;
 use App\Farm;
 use App\Quarter;
 use App\UserFarms;
+use App\Client;
+use App\UserClient;
+
 use JWTAuth;
 class UserController extends Controller
 {    
@@ -72,6 +75,17 @@ class UserController extends Controller
             ]);
         }        
     }
+
+    protected function registerClientsByUser($userId,$clientes){
+        foreach ($clientes as $key => $farmId) {
+            UserClient::create([
+                'id_user' => $userId,
+                'id_client' => $farmId,
+            ]);
+        }        
+    }
+
+
     public function store(Request $request){
         $validator = Validator::make($request->get("user_data"), [
             'name' => 'required|string|max:45',
@@ -101,10 +115,15 @@ class UserController extends Controller
             'email' => $request->get("user_data")['email'],
             'rut' => $request->get("user_data")['rut'],
             'id_role' => $request->get("user_data")['id_role'],          
-            'password' => Hash::make($request->get("user_data")['password']),
+            'module'   => $request->get("user_data")['module'],
+            'password' => Hash::make($request->get("user_data")['password']) 
         ]);
         if(count($request->get('farmsSelected'))>0){            
             $this->registerFarmsByUser($user->id,$request->get('farmsSelected'));
+        }
+
+        if(count($request->get('clientsSelected'))>0){            
+            $this->registerClientsByUser($user->id,$request->get('clientsSelected'));
         }
         $response = [
             'message'=> 'Usuario registrado satisfactoriamente',
@@ -119,6 +138,15 @@ class UserController extends Controller
         }
         $this->registerFarmsByUser($userId,$farms);
     }
+
+    protected function updateClientsByUser($userId,$clients){        
+        $userClient=UserClient::where("id_user",$userId)->get();
+        foreach ($userClient as $key => $value) {
+            $value->delete();
+        }
+        $this->registerClientsByUser($userId,$clients);
+    }
+
     public function update(Request $request,$id){
         $validator = Validator::make($request->get("user_data"), [
             'name' => 'required|string|max:45',
@@ -151,7 +179,12 @@ class UserController extends Controller
             if(count($request->get("farmsSelected"))>0){            
                 $this->updateFarmsByUser($user->id,$request->get('farmsSelected'));
             }
-            
+
+            if(count($request->get("clientsSelected"))>0){            
+                $this->updateClientsByUser($user->id,$request->get('clientsSelected'));
+            }
+
+
             if (!is_null($request->password)&& !empty($request->password)) {
                 $user->password = bcrypt($request->password);
             } else {
@@ -219,6 +252,91 @@ class UserController extends Controller
                 ];
                 return response()->json($response, 200);
             }
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_expired'], $e->getStatusCode());
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['token_invalid'], $e->getStatusCode());
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['token_absent'], $e->getStatusCode());
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de eliminar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }      
+    }
+
+    public function farmsClient($id){
+        try {
+            if($id){
+                $client = Client::find($id);
+                if (!$client) {
+                    return response()->json(['user_not_found'], 404);
+                }
+            }elseif (! $user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+        
+            $farm_res=Farm::query()
+                ->join('client_farms', 'client_farms.id_farm', '=', 'farms.id')
+                ->where('client_farms.id_client', '=', $client->id)
+                ->select('farms.id', 'farms.name')
+                ->get();
+            $response = [
+                'message'=> 'Campos del cliente',
+                'farms' => $farm_res,
+                'client' => $client
+            ];
+            return response()->json($response, 200);
+        
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_expired'], $e->getStatusCode());
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['token_invalid'], $e->getStatusCode());
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['token_absent'], $e->getStatusCode());
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de eliminar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }      
+    }
+
+    public function clients($id){
+        try {
+            if($id){
+                $user = User::find($id);
+                if (!$user) {
+                    return response()->json(['user_not_found'], 404);
+                }
+            }elseif (! $user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+
+            if($user->id_role==1){
+                $response = [
+                    'message'=> 'Lista de clientes',
+                    'clientes' => Client::all(),
+                    'user' => $user
+                ];
+                return response()->json($response, 200);
+            }else{
+                $client_res= Client::query()
+                ->join('user_clients', 'user_clients.id', '=', 'clients.id')
+                ->where('user_clients.id_user', '=', $user->id)->get();
+                $response = [
+                    'message'=> 'Clientes del usuario',
+                    'clientes' => $client_res,
+                    'user' => $user
+                ];
+                return response()->json($response, 200);
+            }
+
+          
+            return response()->json($response, 200);
         } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             return response()->json(['token_expired'], $e->getStatusCode());
         } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {

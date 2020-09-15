@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@authenticate');
 Route::get('/user/quarters/{id}',[
@@ -51,7 +52,38 @@ Route::group(['middleware' => ['jwt.verify']], function() {
        'uses' => 'UserController@farms',
     ]);
 
+    Route::get('/user/clients/{id}',[
+      'middleware' => ['check_role:master,administrador,consultor'],
+      'uses' => 'UserController@clients',
+   ]);
 
+   Route::get('/user/clientsFarm/{id}',[
+      'middleware' => ['check_role:master,administrador,consultor'],
+      'uses' => 'UserController@farmsClient',
+   ]);
+    
+    // cliente 
+   Route::get('/client/all', [
+      'middleware' => ['check_role:master,administrador,consultor'],
+      'uses' => 'ClientController@all',
+   ]);
+   Route::get('/client/{id}', [
+      'middleware' => ['check_role:master,administrador,consultor'],
+      'uses' => 'ClientController@get',
+   ]);
+   Route::post('/client/store', [
+      'middleware' => ['check_role:master'],
+      'uses' => 'ClientController@store',
+   ]);
+   Route::delete('/client/delete/{id}',[
+      'middleware' => ['check_role:master'],
+      'uses' => 'ClientController@delete',
+   ]);
+   Route::post('/client/update/{id}',[
+      'middleware' => ['check_role:master,administrador'],
+      'uses' => 'ClientController@update',
+   ]);
+  
     
     // employee
     Route::get('/employee/all', [
@@ -162,19 +194,42 @@ Route::group(['middleware' => ['jwt.verify']], function() {
        'middleware' => ['check_role:master,administrador'],
        'uses' => 'CountController@update',
     ]);
-    // season
-    Route::get('/season/all', [
+
+    // poda
+    Route::get('/poda/all',[
        'middleware' => ['check_role:master,administrador,consultor'],
-       'uses' => 'SeasonController@all',
+       'uses' => 'PodaController@all',
     ]);
-    Route::get('/season/{id}',[
-       'middleware' => ['check_role:master,administrador,consultor'],
-       'uses' => 'SeasonController@get',
-    ]); 
-    Route::post('/season/store', [
-       'middleware' => ['check_role:master,administrador'],
-       'uses' => 'SeasonController@store',
-    ]); 
+      
+   Route::get('/poda/{id}', [
+      'middleware' => ['check_role:master,administrador,consultor'],
+      'uses' => 'PodaController@get',
+   ]);
+   Route::post('/poda/store', [
+      'middleware' => ['check_role:master'],
+      'uses' => 'PodaController@store',
+   ]);
+   Route::delete('/poda/delete/{id}', [
+      'middleware' => ['check_role:master'],
+      'uses' => 'PodaController@delete',
+   ]);
+   Route::post('/poda/update/{id}', [
+      'middleware' => ['check_role:master,administrador'],
+      'uses' => 'PodaController@update',
+   ]);
+   // season
+   Route::get('/season/all', [
+     'middleware' => ['check_role:master,administrador,consultor'],
+     'uses' => 'SeasonController@all',
+   ]);
+   Route::get('/season/{id}',[
+      'middleware' => ['check_role:master,administrador,consultor'],
+      'uses' => 'SeasonController@get',
+   ]); 
+   Route::post('/season/store', [
+      'middleware' => ['check_role:master,administrador'],
+      'uses' => 'SeasonController@store',
+   ]); 
     Route::delete('/season/delete/{id}', [
        'middleware' => ['check_role:master'],
        'uses' => 'SeasonController@delete',

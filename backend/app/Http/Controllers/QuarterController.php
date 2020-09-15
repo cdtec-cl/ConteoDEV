@@ -36,7 +36,12 @@ class QuarterController extends Controller
             'hectareas'                    => 'required|string',
             'variety'                      => 'required|string',
             'portainjerto'                 => 'required|string',
-            'id_farm'                      => 'required'
+            'id_farm'                      => 'required',
+            'formacion'                    => 'required',
+            'edad_plantas'                 => 'required',
+            'distancia_entrehilera'        => 'required',
+            'distancia_sobrehilera'        => 'required',
+            'densidad_plantas'             => 'required',
         ],[
             'name.required'                         => 'El nombre es requerido',
             'name.unique'                           => 'Ya existe un cuartel con el nombre',
@@ -59,7 +64,12 @@ class QuarterController extends Controller
             'hectareas.required'                    => 'La hectareas es requerida',
             'variety.required'                      => 'La variedad es requerida',
             'portainjerto.required'                 => 'El portainjerto es requerido',
-            'id_farm'                               => 'Debe seleccionar un campo'
+            'id_farm'                               => 'Debe seleccionar un campo',
+                 'formacion.required'               => 'La formación es requerida ',
+            'edad_plantas.required'                 => 'La edad de las plantas es requerido',
+            'distancia_entrehilera.required'        => 'La distancia entre hilera es requerido',
+            'distancia_sobrehilera.required'        => 'La distancia sobre hilera es requerido',
+            'densidad_plantas.required'             => 'La densidad de plantas es requerido'
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 400);
@@ -74,11 +84,17 @@ class QuarterController extends Controller
             'number_clusters_desired' => $request->get('number_clusters_desired'),
             'number_clusters_ha' => $request->get('number_clusters_ha'),
             'number_clusters_for_quarters' => $request->get('number_clusters_for_quarters'),
-            'description' => $request->get('description'),
-            'hectareas' => $request->get('hectareas'),
-            'variety' => $request->get('variety'),
-            'portainjerto' => $request->get('portainjerto'),
-            'id_farm' => intval($request->get('id_farm'))
+            'description'              => $request->get('description'),
+            'hectareas'                => $request->get('hectareas'),
+            'variety'                  => $request->get('variety'),
+            'portainjerto'             => $request->get('portainjerto'),
+            'id_farm'                  => intval($request->get('id_farm')),
+            'formacion'                => $request->get('formacion'),
+            'edad_plantas'             => $request->get('edad_plantas'),
+            'distancia_entrehilera'    => $request->get('distancia_entrehilera'),
+            'distancia_sobrehilera'    => $request->get('distancia_sobrehilera'),
+            'densidad_plantas'         => $request->get('densidad_plantas'),
+            
         ]);
         $response = [
             'message'=> 'Quarter registrado satisfactoriamente',
@@ -118,7 +134,12 @@ class QuarterController extends Controller
             'description'                  => 'required|string',
             'hectareas'                    => 'required|string',
             'variety'                      => 'required|string',
-            'portainjerto'                 => 'required|string'
+            'portainjerto'                 => 'required|string',
+            'formacion'                    => 'required',
+            'edad_plantas'                 => 'required',
+            'distancia_entrehilera'        => 'required',
+            'distancia_sobrehilera'        => 'required',
+            'densidad_plantas'             => 'required',
         ],[
             'name.required'                         => 'El nombre es requerido',
             'name.max'                              => 'El nombre debe contener como máximo 45 caracteres',
@@ -139,7 +160,12 @@ class QuarterController extends Controller
             'description.required'                  => 'La descripción es requerida',
             'hectareas.required'                    => 'La hectareas es requerida',
             'variety.required'                      => 'La variedad es requerida',
-            'portainjerto.required'                 => 'El portainjerto es requerido'
+            'portainjerto.required'                 => 'El portainjerto es requerido',
+            'formacion.required'                    => 'La formación es requerida ',
+            'edad_plantas.required'                 => 'La edad de las plantas es requerido',
+            'distancia_entrehilera.required'        => 'La distancia entre hilera es requerido',
+            'distancia_sobrehilera.required'        => 'La distancia sobre hilera es requerido',
+            'densidad_plantas.required'             => 'La densidad de plantas es requerido'
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 400);
