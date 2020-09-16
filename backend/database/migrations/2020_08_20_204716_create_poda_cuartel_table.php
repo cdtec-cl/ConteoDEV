@@ -13,12 +13,12 @@ class CreatePodaCuartelTable extends Migration
      */
     public function up()
     {
-        Schema::create('poda_cuartel', function (Blueprint $table) {
+        Schema::create('poda_cuartels', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('id_poda')->unsigned();
             $table->foreign('id_poda')
                 ->references('id')
-                ->on('poda')
+                ->on('podas')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');  
             $table->unsignedBigInteger('id_quarter')->unsigned();
