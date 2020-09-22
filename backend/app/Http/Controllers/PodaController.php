@@ -160,7 +160,12 @@ class PodaController extends Controller
             ->join('seasons', 'podas.id_season', '=', 'seasons.id')
             ->where('seasons.year', ($season->year-1))->first();
             $podaCuartel = PodaCuartel::where('id_poda',$id)->get();
-            $podaCuartelAnterior = PodaCuartel::where('id_poda',$podaAnterior->id)->get();
+            if($podaAnterior) {
+                $podaCuartelAnterior = PodaCuartel::where('id_poda',$podaAnterior->id)->get();
+            }else{
+                $podaCuartelAnterior = '';
+            }
+            
 
             if(is_null($poda)){
                 return response()->json(["message"=>"Poda no existente"],404);

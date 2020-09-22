@@ -210,4 +210,24 @@ class QuarterController extends Controller
             ], 500);
         }
     }
+
+    public function getFarm($id){
+        try {
+            $quarter_res=Quarter::query()                           
+            ->where('id_farm', '=', $id)->get();
+
+            $response = [
+                'message'=> 'Lista de quarters por campo',
+                'quarters' => $quarter_res,
+            ];
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+    
 }

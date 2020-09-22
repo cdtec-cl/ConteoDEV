@@ -153,6 +153,11 @@ Route::group(['middleware' => ['jwt.verify']], function() {
        'middleware' => ['check_role:master,administrador'],
        'uses' => 'QuarterController@update',
     ]);
+
+    Route::get('/quarter/quarterFarm/{id}',[
+      'middleware' => ['check_role:master,administrador,consultor'],
+      'uses' => 'QuarterController@getFarm',
+   ]);
     // count
     Route::get('/count/all',[
        'middleware' => ['check_role:master,administrador,consultor'],
