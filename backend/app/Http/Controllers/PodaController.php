@@ -156,11 +156,16 @@ class PodaController extends Controller
         try {
             $poda = Poda::find($id);
             $season = Season::find($poda->id_season); 
+            $farm = Farm::find($poda->id_farm);
             $podaAnterior = Poda::query()                        
             ->join('seasons', 'podas.id_season', '=', 'seasons.id')
-            ->where('seasons.year', ($season->year-1))->first();
-            $podaCuartel = PodaCuartel::where('id_poda',$id)->get();
+            ->where('seasons.year', ($season->year-1))
+            ->select('podas.id','podas.id_season')
+            ->first();
+            $podaCuartel     = PodaCuartel::where('id_poda',$id)->get();
+            $seasonAnterior= '';
             if($podaAnterior) {
+                $seasonAnterior  = Season::find($podaAnterior->id_season); 
                 $podaCuartelAnterior = PodaCuartel::where('id_poda',$podaAnterior->id)->get();
             }else{
                 $podaCuartelAnterior = '';
@@ -176,7 +181,9 @@ class PodaController extends Controller
                 'poda_cuartel' => $podaCuartel,
                 'poda_anterior' => $podaAnterior,
                 'poda_cuartel_anterior' => $podaCuartelAnterior,
-                'season' => $season
+                'season' => $season,
+                'season_anterior' => $seasonAnterior, 
+                'farm' => $farm
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {

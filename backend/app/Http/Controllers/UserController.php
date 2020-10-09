@@ -325,10 +325,11 @@ class UserController extends Controller
                 return response()->json($response, 200);
             }else{
                 $client_res= Client::query()
-                ->join('user_clients', 'user_clients.id', '=', 'clients.id')
-                ->where('user_clients.id_user', '=', $user->id)->get();
+                ->join('user_clients', 'user_clients.id_client', '=', 'clients.id')
+                ->where('user_clients.id_user', '=', $user->id)
+                ->select('clients.id', 'clients.company_email', 'clients.company_name', 'clients.company_producer', 'clients.company_rut')->get();
                 $response = [
-                    'message'=> 'Clientes del usuario',
+                    'message'=> 'Clientes del usuario2',
                     'clientes' => $client_res,
                     'user' => $user
                 ];
@@ -368,7 +369,8 @@ class UserController extends Controller
 
             $quarter_res=Quarter::query()               
                     ->join('user_farms', 'user_farms.id_farm', '=', 'quarters.id_farm')
-                    ->where('user_farms.id_user', '=', $id)->get();
+                    ->where('user_farms.id_user', '=', $id)
+                    ->select('quarters.id', 'quarters.name', 'quarters.description', 'quarters.hectareas', 'quarters.variety',  'quarters.portainjerto')->get();
 
             $response = [
                 'message'=> 'Lista de quarters',

@@ -33,12 +33,16 @@ class ClientController extends Controller
     public function get($id){
         try {
             $client = Client::with("farms")->find($id);
+            $farm_res=Farm::query()
+            ->join('client_farms', 'client_farms.id_farm', '=', 'farms.id')
+            ->where('client_farms.id_client', '=', $id)->get();
             if(is_null($client)){
                 return response()->json(["message"=>"Cliente no existente"],404);
             }
             $response = [
                 'message'=> 'Cliente encontrado satisfactoriamente',
                 'client' => $client,
+                'farms' => $farm_res
             ];
             return response()->json($response, 200);
         } catch (\Exception $e) {
@@ -150,6 +154,26 @@ class ClientController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Ha ocurrido un error al tratar de eliminar los datos.',
+                'error' => $e->getMessage(),
+                'linea' => $e->getLine()
+            ], 500);
+        }
+    }
+
+    public function getFarm($id){
+        try {
+            $farm_res=Farm::query()
+            ->join('client_farms', 'client_farms.id_farm', '=', 'farms.id')
+            ->where('client_farms.id_client', '=', $id)->get();
+            $response = [
+                'message'=> 'Campos del cliente',
+                'farms' => $farm_res,                
+            ];
+        return response()->json($response, 200);
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ha ocurrido un error al tratar de obtener los datos.',
                 'error' => $e->getMessage(),
                 'linea' => $e->getLine()
             ], 500);
