@@ -25,7 +25,8 @@ class Quarter extends Model
         'edad_plantas',
         'distancia_entrehilera',
         'distancia_sobrehilera',
-        'densidad_plantas'
+        'densidad_plantas',
+        'superficie'
         
     ];
 }

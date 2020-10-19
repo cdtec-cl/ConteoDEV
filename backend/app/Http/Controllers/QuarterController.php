@@ -94,6 +94,7 @@ class QuarterController extends Controller
             'distancia_entrehilera'    => $request->get('distancia_entrehilera'),
             'distancia_sobrehilera'    => $request->get('distancia_sobrehilera'),
             'densidad_plantas'         => $request->get('densidad_plantas'),
+            'superficie'               => $request->get('superficie'),
             
         ]);
         $response = [
@@ -140,6 +141,7 @@ class QuarterController extends Controller
             'distancia_entrehilera'        => 'required',
             'distancia_sobrehilera'        => 'required',
             'densidad_plantas'             => 'required',
+            'superficie'                   => 'required',
         ],[
             'name.required'                         => 'El nombre es requerido',
             'name.max'                              => 'El nombre debe contener como máximo 45 caracteres',
@@ -165,7 +167,8 @@ class QuarterController extends Controller
             'edad_plantas.required'                 => 'La edad de las plantas es requerido',
             'distancia_entrehilera.required'        => 'La distancia entre hilera es requerido',
             'distancia_sobrehilera.required'        => 'La distancia sobre hilera es requerido',
-            'densidad_plantas.required'             => 'La densidad de plantas es requerido'
+            'densidad_plantas.required'             => 'La densidad de plantas es requerido',
+            'superficie.required'                   => 'Superficie es requerido'
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 400);
@@ -176,11 +179,13 @@ class QuarterController extends Controller
                 return response()->json(["message"=>"Quarter no existente"],404);
             }
             $quarter->fill($request->all());
+            $quarter->update();
+           
             $response = [
                 'message'=> 'Quarter actualizado satisfactoriamente',
                 'quarter' => $quarter,
             ];
-            $quarter->update();
+            
             return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json([

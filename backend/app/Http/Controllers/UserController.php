@@ -184,15 +184,14 @@ class UserController extends Controller
                 $this->updateClientsByUser($user->id,$request->get('clientsSelected'));
             }
 
-
-            if (!is_null($request->password)&& !empty($request->password)) {
-                $user->password = bcrypt($request->password);
+            if (!is_null($request->get("user_data")['password']) && !empty($request->get("user_data")['password'])) {
+                $user->password = bcrypt($request->get("user_data")['password']);
             } else {
                 $user->password = $pass_last;
             }
             $response = [
                 'message'=> 'Usuario actualizado satisfactoriamente',
-                'user' => $user,
+                'user' => $user
             ];
             $user->update();
             return response()->json($response, 200);
