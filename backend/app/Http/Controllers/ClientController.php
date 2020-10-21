@@ -122,7 +122,7 @@ class ClientController extends Controller
             $client->fill($request->get("client_data"));
 
             if(count($request->get("farmsSelected"))>0){            
-                $this->updateFarmsByUser($client->id,$request->get('farmsSelected'));
+                $this->updateFarmsByClient($client->id,$request->get('farmsSelected'));
             }
         
             $response = [
