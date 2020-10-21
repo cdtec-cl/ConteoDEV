@@ -71,6 +71,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
       'middleware' => ['check_role:master,administrador,consultor'],
       'uses' => 'ClientController@get',
    ]);
+   
 
    Route::post('/client/store', [
       'middleware' => ['check_role:master'],
@@ -85,11 +86,10 @@ Route::group(['middleware' => ['jwt.verify']], function() {
       'uses' => 'ClientController@update',
    ]);
 
-   Route::get('/client/farms/{id}', [
-      'middleware' => ['check_role:master,administrador,consultor'],
-      'uses' => 'ClientController@getFarm,',
+   Route::get('/client/clientfarm/{id}', [
+      'middleware' => ['check_role:master,administrador'],
+      'uses' => 'ClientController@getFarmClient',
    ]);
-  
     
     // employee
     Route::get('/employee/all', [

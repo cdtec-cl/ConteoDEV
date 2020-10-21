@@ -160,7 +160,7 @@ class ClientController extends Controller
         }
     }
 
-    public function getFarm($id){
+    public function getFarmClient($id){
         try {
             $farm_res=Farm::query()
             ->join('client_farms', 'client_farms.id_farm', '=', 'farms.id')
