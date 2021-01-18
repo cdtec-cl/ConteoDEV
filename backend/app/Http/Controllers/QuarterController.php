@@ -10,7 +10,7 @@ class QuarterController extends Controller
     public function all(){
         try {
             $response = [
-                'message'=> 'Lista de quarters',
+                'message'=> 'Lista de Cuarteles',
                 'quarters' => Quarter::all(),
             ];
             return response()->json($response, 200);
@@ -32,8 +32,7 @@ class QuarterController extends Controller
             'number_clusters_desired'      => 'required|integer',
             'number_clusters_ha'           => 'required|integer',
             'number_clusters_for_quarters' => 'required|integer',
-            'description'                  => 'required|string',
-            'hectareas'                    => 'required|string',
+            'description'                  => 'required|string',            
             'variety'                      => 'required|string',
             'portainjerto'                 => 'required|string',
             'id_farm'                      => 'required',
@@ -65,7 +64,7 @@ class QuarterController extends Controller
             'variety.required'                      => 'La variedad es requerida',
             'portainjerto.required'                 => 'El portainjerto es requerido',
             'id_farm'                               => 'Debe seleccionar un campo',
-                 'formacion.required'               => 'La formación es requerida ',
+            'formacion.required'                    => 'La formación es requerida ',
             'edad_plantas.required'                 => 'La edad de las plantas es requerido',
             'distancia_entrehilera.required'        => 'La distancia entre hilera es requerido',
             'distancia_sobrehilera.required'        => 'La distancia sobre hilera es requerido',
@@ -85,7 +84,7 @@ class QuarterController extends Controller
             'number_clusters_ha' => $request->get('number_clusters_ha'),
             'number_clusters_for_quarters' => $request->get('number_clusters_for_quarters'),
             'description'              => $request->get('description'),
-            'hectareas'                => $request->get('hectareas'),
+            'hectareas'                => $request->get('superficie'),
             'variety'                  => $request->get('variety'),
             'portainjerto'             => $request->get('portainjerto'),
             'id_farm'                  => intval($request->get('id_farm')),
@@ -98,7 +97,7 @@ class QuarterController extends Controller
             
         ]);
         $response = [
-            'message'=> 'Quarter registrado satisfactoriamente',
+            'message'=> 'Cuartel registrado satisfactoriamente',
             'quarter' => $quarter,
         ];
         return response()->json($response, 200);
@@ -107,7 +106,7 @@ class QuarterController extends Controller
         try {
             $quarter = Quarter::find($id);
             if(is_null($quarter)){
-                return response()->json(["message"=>"Quarter no existente"],404);
+                return response()->json(["message"=>"Cuartel no existente"],404);
             }
             $response = [
                 'message'=> 'Cuartel encontrado satisfactoriamente',
@@ -132,8 +131,7 @@ class QuarterController extends Controller
             'number_clusters_desired'      => 'required|integer',
             'number_clusters_ha'           => 'required|integer',
             'number_clusters_for_quarters' => 'required|integer',
-            'description'                  => 'required|string',
-            'hectareas'                    => 'required|string',
+            'description'                  => 'required|string',            
             'variety'                      => 'required|string',
             'portainjerto'                 => 'required|string',
             'formacion'                    => 'required',
@@ -176,13 +174,13 @@ class QuarterController extends Controller
         try {
             $quarter = Quarter::find($id);
             if(is_null($quarter)){
-                return response()->json(["message"=>"Quarter no existente"],404);
+                return response()->json(["message"=>"Cuartel no existente"],404);
             }
             $quarter->fill($request->all());
             $quarter->update();
            
             $response = [
-                'message'=> 'Quarter actualizado satisfactoriamente',
+                'message'=> 'Cuartel actualizado satisfactoriamente',
                 'quarter' => $quarter,
             ];
             
@@ -199,11 +197,11 @@ class QuarterController extends Controller
         try {
             $quarter = Quarter::find($id);
             if(is_null($quarter)){
-                return response()->json(["message"=>"Quarter no existente"],404);
+                return response()->json(["message"=>"Cuartel no existente"],404);
             }
             $quarter->delete();
             $response = [
-                'message'=> 'Quarter eliminado satisfactoriamente',
+                'message'=> 'Cuartel eliminado satisfactoriamente',
                 'quarter' => $quarter,
             ];
             return response()->json($response, 200);
@@ -222,7 +220,7 @@ class QuarterController extends Controller
             ->where('id_farm', '=', $id)->get();
 
             $response = [
-                'message'=> 'Lista de quarters por campo',
+                'message'=> 'Lista de cuarteles por campo',
                 'quarters' => $quarter_res,
             ];
             return response()->json($response, 200);
